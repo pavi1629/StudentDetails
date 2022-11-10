@@ -1,0 +1,207 @@
+﻿@model SampleCore.Core.Model.StudentDetail
+@{
+    Layout = null;
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+<style>
+    .RegistrationForm {
+        margin: 0px 383px 10px 341px;
+        padding: 0px 0px 25px 0px;
+        border: 4px solid black;
+        border-radius: 25px;
+        padding-left: 50px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: white;
+    }
+    body {
+        background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIl8mf4repF5E837bY9zkRGhRINiuETf09_w&usqp=CAU');
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    .error {
+        color: red;
+    }
+    a {
+        text-decoration: none;
+    }
+    .Hide {
+        display: none;
+    }
+    .required {
+        color: red;
+    }
+</style>
+<body>
+    @using (Html.BeginForm("StudentEntry", "StudentInformation", FormMethod.Post, new { @id = "RestrictionForm" }))
+    {
+        <div class="RegistrationForm">
+            @Html.HiddenFor(a=>a.StudentId)
+            <div id="clear">
+                <h3 align="center">
+                    <i class="fa fa-address-card" style="font-size:24px"></i> Students Information Details
+                </h3>
+                <div>
+                    <h3>FirstName<span class="required">*</span></h3>
+                    <i class="fa fa-user" style="font-size:20px;"></i>
+                    @Html.TextBoxFor(a=>a.FirstName,new{ placeholder="FirstName",maxlength="15",style="border:none;"})
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                </div>
+                <div>
+                    <h3><label> LastName<span class="required">*</span> &emsp; </label></h3>
+                    <i class="fa fa-user" style="font-size:20px"></i>
+                    @Html.TextBoxFor((a=>a.LastName),new{placeholder="LastName",maxlength="15",style=" border:none;"})
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                </div>
+                <div>
+                    <h3>
+                        <label>
+                            Department<span class="required">*</span> &emsp;
+                        </label>
+                    </h3>
+                    <i class='far fa-building' style='font-size:20px'></i>
+                    @Html.DropDownList("Department", new List<SelectListItem>
+                    {
+                    new SelectListItem{ Text="ComputerScience"},
+                    new SelectListItem{ Text="Accounts"},
+                    new SelectListItem{ Text="PureScience"},
+                    new SelectListItem{Text="History"},
+                    new SelectListItem{Text="Agriculture"},
+                    new SelectListItem{Text="Mathematics"},
+                    }, "---Select Department---")
+
+                    <br />
+                </div>
+                <div>
+                    <h3><label>Age<span class="required">*</span> &emsp; &emsp;</label></h3>
+                    <i class="fa fa-child" style="font-size:20px"></i>
+                    @Html.TextBoxFor((a=>a.Age),new{placeholder="Age",maxlength="3",style=" border:none;"})
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                </div>
+                <div>
+                    <h3> <label>Class<span class="required">*</span> &emsp; &emsp;</label></h3>
+                    <i class="fa fa-cubes" style="font-size:20px"></i>
+                    @Html.TextBoxFor((a=>a.Class),new{placeholder="Class",maxlength="4",style="border:none;"})
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                </div>
+                <div>
+                    <h3>Gender</h3>
+                    <i class="fa fa-venus-double" style="font-size:24px"></i>
+                    @Html.RadioButtonFor(a => a.Gender,"Male")Male
+                    @Html.RadioButtonFor(a => a.Gender,"Female")Female
+                    @Html.RadioButtonFor(a => a.Gender,"Others")Others
+                </div>
+                <div>
+                    <h3> <label>Year Of Joining &nbsp;</label></h3>
+                    <i class='fas fa-calendar-alt' style='font-size:24px'></i>
+                    @Html.TextBoxFor((a=>a.JoiningYear),new{type="date",style="width:160px;border:none;"})
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                </div>
+                <div>
+                    <h3><label>Location</label></h3>
+                    <i class='fas fa-map-marker-alt' style='font-size:20px'></i>
+                    @Html.TextBoxFor((a=>a.Location),new{placeholder="Location",style="border:none;"})
+                    <hr style="width:100%;text-align:left;margin-left:0">
+                </div>
+                <button style="border-radius:25px; background-color:indianred;" type="submit"> @Html.ActionLink("Back to List","ReadList") </button>
+                <button id="btnsubmit" style="border-radius:25px; background-color:khaki;float:right;margin-right:60px" type="submit">Submit</button>
+                <button id="btnclear" class="Hide" style="background-color:lightseagreen;float:right;margin-right:70px;border-radius:25px;" type="button" onclick="newFunction()">Clear</button>
+                <button id="btnupdate" class="Hide" style="border-radius:25px; background-color:hotpink;float:right;margin-right:10px" type="submit">Update</button>
+            </div>
+        </div>
+
+    }
+</body>
+<script>
+    $().ready(function () {
+
+        $("#RestrictionForm").validate({
+            // in 'rules' user have to specify all the constraints for respective fields
+            rules: {
+
+                FirstName: {
+                    required: true,
+                    lettersonly: true,
+                    maxlength: 15
+                },
+                LastName: {
+                    required: true,
+                    lettersonly: true,
+                    maxlength: 15
+                },
+
+                Class: {
+                    required: true,
+                    lettersonly: true,
+                    maxlength: 4
+                },
+
+                Age: {
+
+                    required: true,
+                    number: true,
+                    maxlength: 3
+                },
+                Department:
+                {
+                    required: true,
+                },
+            },
+            // in 'messages' user have to specify message as per rules
+            messages: {
+                FirstName: {
+                    required: " Kindly enter FirstName",
+                    lettersonly: " Only alphabets are valid",
+                    maxlength: " Must Not Exceed 15"
+                },
+                LastName: {
+                    required: " Kindly enter LastName",
+                    lettersonly: " Only alphabets are valid",
+                    maxlength: " Must not Exceed 15"
+                },
+                Age: {
+                    required: " kindly enter your Age",
+                    maxlength: " Must not exceed 3 "
+                },
+                Class: {
+                    required: " Kindly enter Class",
+                    lettersonly: " Only alphabets are valid",
+                    maxlength: " Must not Exceed 4"
+                },
+                Department: {
+                    required: " kindly select a Department"
+                }
+            },
+        });
+    });
+
+    function newFunction() {
+        $("#clear").find("input,input[type = radio],select").val("");
+        $('input[name=Gender]').attr('checked', false);
+    }
+</script>
+<script>
+    var Edit = @Html.Raw(ViewBag.Edit)
+            if (Edit == 6) {
+        $("#btnsubmit").hide();
+        $("#btnupdate").show();
+        $("#btnclear").show();
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
